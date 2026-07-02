@@ -79,6 +79,14 @@ export default function PatientDetail() {
 
       <div style={styles.section}>
         <div style={styles.apptHeader}>
+          <p style={styles.sectionTitle}>Nutrition Assessments</p>
+          <Link to={`/patients/${id}/assessments/new`} style={styles.smallLink}>+ New</Link>
+        </div>
+        <Link to={`/patients/${id}/assessments`} style={styles.viewAllLink}>View all assessments →</Link>
+      </div>
+
+      <div style={styles.section}>
+        <div style={styles.apptHeader}>
           <p style={styles.sectionTitle}>Recent Appointments</p>
           <Link to={`/appointments/new?patient=${id}`} style={styles.smallLink}>+ New</Link>
         </div>
@@ -132,6 +140,7 @@ const styles = {
   row: { color: '#e2e8f0', fontSize: '0.9rem', margin: '0.2rem 0' },
   apptHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
   smallLink: { color: '#60a5fa', fontSize: '0.8rem', textDecoration: 'none' },
+  viewAllLink: { color: '#60a5fa', fontSize: '0.85rem', textDecoration: 'none' },
   apptRow: {
     display: 'flex',
     justifyContent: 'space-between',

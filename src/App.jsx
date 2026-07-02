@@ -9,6 +9,9 @@ import PatientDetail from './pages/PatientDetail'
 import PatientForm from './pages/PatientForm'
 import Appointments from './pages/Appointments'
 import AppointmentForm from './pages/AppointmentForm'
+import AssessmentList from './pages/AssessmentList'
+import AssessmentForm from './pages/AssessmentForm'
+import AssessmentDetail from './pages/AssessmentDetail'
 
 export default function App() {
   return (
@@ -30,6 +33,10 @@ export default function App() {
             <Route path="patients/new" element={<PatientForm />} />
             <Route path="patients/:id" element={<PatientDetail />} />
             <Route path="patients/:id/edit" element={<PatientForm />} />
+            <Route path="patients/:id/assessments" element={<AssessmentList />} />
+            <Route path="patients/:id/assessments/new" element={<AssessmentForm />} />
+            <Route path="patients/:id/assessments/:assessmentId" element={<AssessmentDetail />} />
+            <Route path="patients/:id/assessments/:assessmentId/edit" element={<AssessmentForm />} />
             <Route path="appointments" element={<Appointments />} />
             <Route path="appointments/new" element={<AppointmentForm />} />
             <Route path="appointments/:id/edit" element={<AppointmentForm />} />

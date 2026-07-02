@@ -1,22 +1,23 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useState } from 'react'
+import { Menu, LayoutDashboard, Users, Calendar } from 'lucide-react'
 
 export default function Layout() {
   const { signOut } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
 
   const navItems = [
-    { to: '/', label: 'Dashboard', icon: '🏠', end: true },
-    { to: '/patients', label: 'Patients', icon: '🧑‍⚕️' },
-    { to: '/appointments', label: 'Appointments', icon: '📅' },
+    { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
+    { to: '/patients', label: 'Patients', icon: Users },
+    { to: '/appointments', label: 'Appointments', icon: Calendar },
   ]
 
   return (
     <div style={styles.wrapper}>
       <header style={styles.topbar}>
         <button style={styles.menuBtn} onClick={() => setMenuOpen(!menuOpen)}>
-          ☰
+          <Menu size={22} />
         </button>
         <span style={styles.brand}>DietitianOS</span>
         <button style={styles.signOutBtn} onClick={signOut}>
@@ -26,21 +27,24 @@ export default function Layout() {
 
       <div style={styles.body}>
         <nav style={{ ...styles.sidebar, ...(menuOpen ? styles.sidebarOpen : {}) }}>
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              onClick={() => setMenuOpen(false)}
-              style={({ isActive }) => ({
-                ...styles.navLink,
-                ...(isActive ? styles.navLinkActive : {}),
-              })}
-            >
-              <span style={{ marginRight: '0.6rem' }}>{item.icon}</span>
-              {item.label}
-            </NavLink>
-          ))}
+          {navItems.map((item) => {
+            const Icon = item.icon
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                onClick={() => setMenuOpen(false)}
+                style={({ isActive }) => ({
+                  ...styles.navLink,
+                  ...(isActive ? styles.navLinkActive : {}),
+                })}
+              >
+                <Icon size={18} style={{ marginRight: '0.6rem' }} />
+                {item.label}
+              </NavLink>
+            )
+          })}
         </nav>
 
         <main style={styles.main}>

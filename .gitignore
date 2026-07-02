@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 .env
 dietitianos-src.tar.gz
+.env
+dietitianos-src.tar.gz

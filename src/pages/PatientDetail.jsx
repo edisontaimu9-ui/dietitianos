@@ -87,6 +87,14 @@ export default function PatientDetail() {
 
       <div style={styles.section}>
         <div style={styles.apptHeader}>
+          <p style={styles.sectionTitle}>Nutrition Care Process</p>
+          <Link to={`/patients/${id}/ncp/new`} style={styles.smallLink}>+ New</Link>
+        </div>
+        <Link to={`/patients/${id}/ncp`} style={styles.viewAllLink}>View all NCP records →</Link>
+      </div>
+
+      <div style={styles.section}>
+        <div style={styles.apptHeader}>
           <p style={styles.sectionTitle}>Recent Appointments</p>
           <Link to={`/appointments/new?patient=${id}`} style={styles.smallLink}>+ New</Link>
         </div>

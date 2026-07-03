@@ -12,6 +12,9 @@ import AppointmentForm from './pages/AppointmentForm'
 import AssessmentList from './pages/AssessmentList'
 import AssessmentForm from './pages/AssessmentForm'
 import AssessmentDetail from './pages/AssessmentDetail'
+import NcpList from './pages/NcpList'
+import NcpForm from './pages/NcpForm'
+import NcpDetail from './pages/NcpDetail'
 
 export default function App() {
   return (
@@ -37,6 +40,10 @@ export default function App() {
             <Route path="patients/:id/assessments/new" element={<AssessmentForm />} />
             <Route path="patients/:id/assessments/:assessmentId" element={<AssessmentDetail />} />
             <Route path="patients/:id/assessments/:assessmentId/edit" element={<AssessmentForm />} />
+            <Route path="patients/:id/ncp" element={<NcpList />} />
+            <Route path="patients/:id/ncp/new" element={<NcpForm />} />
+            <Route path="patients/:id/ncp/:ncpId" element={<NcpDetail />} />
+            <Route path="patients/:id/ncp/:ncpId/edit" element={<NcpForm />} />
             <Route path="appointments" element={<Appointments />} />
             <Route path="appointments/new" element={<AppointmentForm />} />
             <Route path="appointments/:id/edit" element={<AppointmentForm />} />

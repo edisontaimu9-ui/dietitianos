@@ -106,28 +106,28 @@ function Row({ label, value, block }) {
 }
 
 const styles = {
-  muted: { color: '#64748b', fontSize: '0.9rem' },
+  muted: { color: 'var(--text-muted)', fontSize: '0.9rem' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' },
-  heading: { color: '#fff', fontSize: '1.2rem', margin: 0 },
-  date: { color: '#94a3b8', fontSize: '0.85rem', margin: '0.2rem 0 0' },
+  heading: { color: 'var(--text-heading)', fontSize: '1.2rem', margin: 0 },
+  date: { color: 'var(--text-secondary)', fontSize: '0.85rem', margin: '0.2rem 0 0' },
   editBtn: {
-    background: '#1e293b', border: '1px solid #334155', color: '#e2e8f0',
+    background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-primary)',
     padding: '0.45rem 0.9rem', borderRadius: '8px', textDecoration: 'none',
     fontSize: '0.85rem', display: 'flex', alignItems: 'center',
   },
-  section: { background: '#1e293b', borderRadius: '10px', padding: '0.85rem 1rem', marginBottom: '0.6rem' },
+  section: { background: 'var(--surface)', borderRadius: '10px', padding: '0.85rem 1rem', marginBottom: '0.6rem' },
   sectionTitle: {
-    color: '#4ade80', fontSize: '0.75rem', textTransform: 'uppercase',
+    color: 'var(--success-text)', fontSize: '0.75rem', textTransform: 'uppercase',
     letterSpacing: '0.05em', margin: '0 0 0.5rem',
   },
   rowInline: { margin: '0.2rem 0', fontSize: '0.9rem' },
-  rowLabelInline: { color: '#94a3b8' },
-  rowLabel: { color: '#94a3b8', fontSize: '0.75rem', margin: '0 0 0.15rem' },
-  rowValue: { color: '#e2e8f0', fontSize: '0.9rem', margin: 0, whiteSpace: 'pre-wrap' },
+  rowLabelInline: { color: 'var(--text-secondary)' },
+  rowLabel: { color: 'var(--text-secondary)', fontSize: '0.75rem', margin: '0 0 0.15rem' },
+  rowValue: { color: 'var(--text-primary)', fontSize: '0.9rem', margin: 0, whiteSpace: 'pre-wrap' },
   riskBadge: (level) => ({
     display: 'inline-block', fontSize: '0.75rem', padding: '0.3rem 0.7rem', borderRadius: '999px',
     textTransform: 'capitalize',
     background: level === 'high' ? '#dc262633' : level === 'moderate' ? '#f59e0b33' : '#16a34a33',
-    color: level === 'high' ? '#f87171' : level === 'moderate' ? '#fbbf24' : '#4ade80',
+    color: level === 'high' ? 'var(--danger-text)' : level === 'moderate' ? 'var(--warning-text)' : 'var(--success-text)',
   }),
 }

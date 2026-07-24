@@ -66,15 +66,15 @@ export default function MealPlanList() {
 
 const styles = {
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' },
-  heading: { fontSize: '1.2rem', color: '#fff', margin: 0, display: 'flex', alignItems: 'center' },
+  heading: { fontSize: '1.2rem', color: 'var(--text-heading)', margin: 0, display: 'flex', alignItems: 'center' },
   addBtn: {
-    background: '#16a34a', color: '#fff', padding: '0.5rem 0.9rem', borderRadius: '8px',
+    background: 'var(--accent)', color: '#fff', padding: '0.5rem 0.9rem', borderRadius: '8px',
     textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center',
   },
-  muted: { color: '#64748b', fontSize: '0.9rem' },
+  muted: { color: 'var(--text-muted)', fontSize: '0.9rem' },
   list: { display: 'flex', flexDirection: 'column', gap: '0.5rem' },
-  card: { background: '#1e293b', borderRadius: '10px', padding: '0.85rem 1rem', textDecoration: 'none' },
-  title: { margin: 0, color: '#fff', fontWeight: 600, fontSize: '0.95rem' },
-  meta: { margin: '0.2rem 0 0', color: '#94a3b8', fontSize: '0.8rem' },
-  kcal: { margin: '0.4rem 0 0', color: '#4ade80', fontSize: '0.8rem', fontWeight: 600 },
+  card: { background: 'var(--surface)', borderRadius: '10px', padding: '0.85rem 1rem', textDecoration: 'none' },
+  title: { margin: 0, color: 'var(--text-heading)', fontWeight: 600, fontSize: '0.95rem' },
+  meta: { margin: '0.2rem 0 0', color: 'var(--text-secondary)', fontSize: '0.8rem' },
+  kcal: { margin: '0.4rem 0 0', color: 'var(--success-text)', fontSize: '0.8rem', fontWeight: 600 },
 }

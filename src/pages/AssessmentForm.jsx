@@ -268,36 +268,36 @@ function SectionTitle({ children }) {
 }
 
 const styles = {
-  heading: { fontSize: '1.3rem', color: '#fff', margin: 0 },
-  subheading: { color: '#94a3b8', fontSize: '0.9rem', margin: '0.2rem 0 1rem' },
-  muted: { color: '#64748b', fontSize: '0.9rem' },
+  heading: { fontSize: '1.3rem', color: 'var(--text-heading)', margin: 0 },
+  subheading: { color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '0.2rem 0 1rem' },
+  muted: { color: 'var(--text-muted)', fontSize: '0.9rem' },
   form: { display: 'flex', flexDirection: 'column', gap: '0.85rem' },
   row: { display: 'flex', gap: '0.6rem' },
   field: { display: 'flex', flexDirection: 'column', gap: '0.3rem', flex: 1 },
-  label: { color: '#94a3b8', fontSize: '0.8rem' },
+  label: { color: 'var(--text-secondary)', fontSize: '0.8rem' },
   sectionTitle: {
-    color: '#4ade80', fontSize: '0.75rem', textTransform: 'uppercase',
+    color: 'var(--success-text)', fontSize: '0.75rem', textTransform: 'uppercase',
     letterSpacing: '0.05em', margin: '0.5rem 0 -0.3rem',
   },
   input: {
-    padding: '0.65rem', borderRadius: '8px', border: '1px solid #334155',
-    background: '#1e293b', color: '#fff', fontSize: '0.9rem', outline: 'none',
+    padding: '0.65rem', borderRadius: '8px', border: '1px solid var(--border)',
+    background: 'var(--surface)', color: 'var(--text-heading)', fontSize: '0.9rem', outline: 'none',
     boxSizing: 'border-box', width: '100%',
   },
   textarea: {
-    padding: '0.65rem', borderRadius: '8px', border: '1px solid #334155',
-    background: '#1e293b', color: '#fff', fontSize: '0.9rem', outline: 'none',
+    padding: '0.65rem', borderRadius: '8px', border: '1px solid var(--border)',
+    background: 'var(--surface)', color: 'var(--text-heading)', fontSize: '0.9rem', outline: 'none',
     minHeight: '70px', fontFamily: 'inherit', resize: 'vertical',
     boxSizing: 'border-box', width: '100%',
   },
   calcBox: {
     background: '#16a34a1a', border: '1px solid #16a34a44', borderRadius: '8px',
-    padding: '0.65rem 0.85rem', color: '#4ade80', fontSize: '0.85rem', lineHeight: 1.6,
+    padding: '0.65rem 0.85rem', color: 'var(--success-text)', fontSize: '0.85rem', lineHeight: 1.6,
   },
-  calcWarning: { color: '#fbbf24', fontSize: '0.75rem', marginTop: '0.3rem' },
-  error: { color: '#f87171', fontSize: '0.85rem' },
+  calcWarning: { color: 'var(--warning-text)', fontSize: '0.75rem', marginTop: '0.3rem' },
+  error: { color: 'var(--danger-text)', fontSize: '0.85rem' },
   saveBtn: {
-    background: '#16a34a', color: '#fff', border: 'none', padding: '0.8rem',
+    background: 'var(--accent)', color: '#fff', border: 'none', padding: '0.8rem',
     borderRadius: '8px', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', marginTop: '0.5rem',
   },
 }

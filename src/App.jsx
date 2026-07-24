@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
+import { ThemeProvider } from './context/ThemeContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
 import Auth from './pages/Auth'
@@ -22,6 +23,7 @@ import MealPlanDetail from './pages/MealPlanDetail'
 export default function App() {
   return (
     <BrowserRouter basename="/dietitianos/">
+      <ThemeProvider>
       <AuthProvider>
         <Routes>
           <Route path="/auth" element={<Auth />} />
@@ -57,6 +59,7 @@ export default function App() {
           </Route>
         </Routes>
       </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   )
 }

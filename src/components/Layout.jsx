@@ -1,10 +1,12 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import { useState } from 'react'
-import { Menu, LayoutDashboard, Users, Calendar } from 'lucide-react'
+import { Menu, LayoutDashboard, Users, Calendar, Sun, Moon } from 'lucide-react'
 
 export default function Layout() {
   const { signOut } = useAuth()
+  const { theme, toggleTheme } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
 
   const navItems = [
@@ -20,9 +22,19 @@ export default function Layout() {
           <Menu size={22} />
         </button>
         <span style={styles.brand}>DietitianOS</span>
-        <button style={styles.signOutBtn} onClick={signOut}>
-          Sign out
-        </button>
+        <div style={styles.headerActions}>
+          <button
+            style={styles.themeBtn}
+            onClick={toggleTheme}
+            aria-label="Toggle light/dark mode"
+            title="Toggle light/dark mode"
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+          <button style={styles.signOutBtn} onClick={signOut}>
+            Sign out
+          </button>
+        </div>
       </header>
 
       <div style={styles.body}>
@@ -58,16 +70,16 @@ export default function Layout() {
 const styles = {
   wrapper: {
     minHeight: '100vh',
-    background: '#0f172a',
-    color: '#e2e8f0',
+    background: 'var(--bg)',
+    color: 'var(--text-primary)',
   },
   topbar: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '0.85rem 1rem',
-    background: '#1e293b',
-    borderBottom: '1px solid #334155',
+    background: 'var(--surface)',
+    borderBottom: '1px solid var(--border)',
     position: 'sticky',
     top: 0,
     zIndex: 10,
@@ -75,19 +87,34 @@ const styles = {
   menuBtn: {
     background: 'none',
     border: 'none',
-    color: '#fff',
+    color: 'var(--text-heading)',
     fontSize: '1.3rem',
     cursor: 'pointer',
   },
   brand: {
-    color: '#fff',
+    color: 'var(--text-heading)',
     fontWeight: 700,
     fontSize: '1.05rem',
   },
+  headerActions: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  themeBtn: {
+    background: 'none',
+    border: '1px solid var(--border)',
+    color: 'var(--text-secondary)',
+    borderRadius: '6px',
+    padding: '0.35rem 0.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+  },
   signOutBtn: {
     background: 'none',
-    border: '1px solid #334155',
-    color: '#94a3b8',
+    border: '1px solid var(--border)',
+    color: 'var(--text-secondary)',
     borderRadius: '6px',
     padding: '0.35rem 0.7rem',
     fontSize: '0.8rem',
@@ -101,8 +128,8 @@ const styles = {
     display: 'none',
     flexDirection: 'column',
     gap: '0.25rem',
-    background: '#1e293b',
-    borderRight: '1px solid #334155',
+    background: 'var(--surface)',
+    borderRight: '1px solid var(--border)',
     padding: '0.75rem',
     position: 'absolute',
     top: 0,
@@ -117,7 +144,7 @@ const styles = {
   navLink: {
     display: 'flex',
     alignItems: 'center',
-    color: '#94a3b8',
+    color: 'var(--text-secondary)',
     textDecoration: 'none',
     padding: '0.6rem 0.75rem',
     borderRadius: '8px',
@@ -125,7 +152,7 @@ const styles = {
   },
   navLinkActive: {
     background: '#16a34a22',
-    color: '#4ade80',
+    color: 'var(--success-text)',
     fontWeight: 600,
   },
   main: {

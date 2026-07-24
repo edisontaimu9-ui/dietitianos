@@ -122,48 +122,48 @@ export default function PatientDetail() {
 }
 
 const styles = {
-  muted: { color: '#64748b', fontSize: '0.9rem' },
+  muted: { color: 'var(--text-muted)', fontSize: '0.9rem' },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: '1rem',
   },
-  name: { color: '#fff', fontSize: '1.3rem', margin: 0 },
-  meta: { color: '#94a3b8', fontSize: '0.85rem', margin: '0.25rem 0 0' },
+  name: { color: 'var(--text-heading)', fontSize: '1.3rem', margin: 0 },
+  meta: { color: 'var(--text-secondary)', fontSize: '0.85rem', margin: '0.25rem 0 0' },
   editBtn: {
-    background: '#1e293b',
-    border: '1px solid #334155',
-    color: '#e2e8f0',
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    color: 'var(--text-primary)',
     padding: '0.45rem 0.9rem',
     borderRadius: '8px',
     textDecoration: 'none',
     fontSize: '0.85rem',
   },
   section: {
-    background: '#1e293b',
+    background: 'var(--surface)',
     borderRadius: '10px',
     padding: '0.85rem 1rem',
     marginBottom: '0.6rem',
   },
   sectionTitle: {
-    color: '#4ade80',
+    color: 'var(--success-text)',
     fontSize: '0.75rem',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
     margin: '0 0 0.4rem',
   },
-  row: { color: '#e2e8f0', fontSize: '0.9rem', margin: '0.2rem 0' },
+  row: { color: 'var(--text-primary)', fontSize: '0.9rem', margin: '0.2rem 0' },
   apptHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  smallLink: { color: '#60a5fa', fontSize: '0.8rem', textDecoration: 'none' },
-  viewAllLink: { color: '#60a5fa', fontSize: '0.85rem', textDecoration: 'none' },
+  smallLink: { color: 'var(--info-text)', fontSize: '0.8rem', textDecoration: 'none' },
+  viewAllLink: { color: 'var(--info-text)', fontSize: '0.85rem', textDecoration: 'none' },
   apptRow: {
     display: 'flex',
     justifyContent: 'space-between',
     padding: '0.5rem 0',
-    borderTop: '1px solid #334155',
+    borderTop: '1px solid var(--border)',
     fontSize: '0.85rem',
-    color: '#e2e8f0',
+    color: 'var(--text-primary)',
   },
   badge: (status) => ({
     fontSize: '0.7rem',
@@ -173,6 +173,6 @@ const styles = {
     background:
       status === 'completed' ? '#16a34a33' : status === 'cancelled' ? '#dc262633' : '#3b82f633',
     color:
-      status === 'completed' ? '#4ade80' : status === 'cancelled' ? '#f87171' : '#60a5fa',
+      status === 'completed' ? 'var(--success-text)' : status === 'cancelled' ? 'var(--danger-text)' : 'var(--info-text)',
   }),
 }

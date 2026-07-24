@@ -113,12 +113,12 @@ const styles = {
   heading: {
     fontSize: '1.4rem',
     marginBottom: '1rem',
-    color: '#fff',
+    color: 'var(--text-heading)',
   },
   subheading: {
     fontSize: '1.1rem',
     margin: '1.5rem 0 0.75rem',
-    color: '#fff',
+    color: 'var(--text-heading)',
   },
   statsGrid: {
     display: 'grid',
@@ -126,7 +126,7 @@ const styles = {
     gap: '0.6rem',
   },
   statCard: {
-    background: '#1e293b',
+    background: 'var(--surface)',
     borderRadius: '10px',
     padding: '0.85rem 0.6rem',
     textAlign: 'center',
@@ -134,12 +134,12 @@ const styles = {
   statValue: {
     fontSize: '1.5rem',
     fontWeight: 700,
-    color: '#4ade80',
+    color: 'var(--success-text)',
     margin: 0,
   },
   statLabel: {
     fontSize: '0.7rem',
-    color: '#94a3b8',
+    color: 'var(--text-secondary)',
     marginTop: '0.25rem',
   },
   quickActions: {
@@ -149,8 +149,8 @@ const styles = {
   },
   actionBtn: {
     flex: 1,
-    background: '#16a34a',
-    color: '#fff',
+    background: 'var(--accent)',
+    color: 'var(--text-heading)',
     textAlign: 'center',
     padding: '0.65rem',
     borderRadius: '8px',
@@ -159,7 +159,7 @@ const styles = {
     fontWeight: 600,
   },
   muted: {
-    color: '#64748b',
+    color: 'var(--text-muted)',
     fontSize: '0.9rem',
   },
   list: {
@@ -168,7 +168,7 @@ const styles = {
     gap: '0.5rem',
   },
   apptCard: {
-    background: '#1e293b',
+    background: 'var(--surface)',
     borderRadius: '10px',
     padding: '0.75rem 1rem',
     display: 'flex',
@@ -178,12 +178,12 @@ const styles = {
   apptPatient: {
     margin: 0,
     fontWeight: 600,
-    color: '#fff',
+    color: 'var(--text-heading)',
     fontSize: '0.95rem',
   },
   apptTime: {
     margin: 0,
-    color: '#94a3b8',
+    color: 'var(--text-secondary)',
     fontSize: '0.8rem',
     marginTop: '0.15rem',
   },
@@ -195,6 +195,6 @@ const styles = {
     background:
       status === 'completed' ? '#16a34a33' : status === 'cancelled' ? '#dc262633' : '#3b82f633',
     color:
-      status === 'completed' ? '#4ade80' : status === 'cancelled' ? '#f87171' : '#60a5fa',
+      status === 'completed' ? 'var(--success-text)' : status === 'cancelled' ? 'var(--danger-text)' : 'var(--info-text)',
   }),
 }

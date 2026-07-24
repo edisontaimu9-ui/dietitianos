@@ -312,7 +312,7 @@ export default function MealPlanForm() {
                         {food.measure} · {food.kcal} kcal · {food.protein_g}g protein
                       </p>
                     </div>
-                    <Plus size={18} color="#4ade80" />
+                    <Plus size={18} color="var(--success-text)" />
                   </button>
                 ))
               )}
@@ -334,63 +334,63 @@ function Field({ label, children }) {
 }
 
 const styles = {
-  heading: { fontSize: '1.3rem', color: '#fff', margin: 0 },
-  subheading: { color: '#94a3b8', fontSize: '0.9rem', margin: '0.2rem 0 1rem' },
-  muted: { color: '#64748b', fontSize: '0.9rem' },
+  heading: { fontSize: '1.3rem', color: 'var(--text-heading)', margin: 0 },
+  subheading: { color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '0.2rem 0 1rem' },
+  muted: { color: 'var(--text-muted)', fontSize: '0.9rem' },
   form: { display: 'flex', flexDirection: 'column', gap: '0.85rem' },
   row: { display: 'flex', gap: '0.6rem' },
   field: { display: 'flex', flexDirection: 'column', gap: '0.3rem', flex: 1 },
-  label: { color: '#94a3b8', fontSize: '0.8rem' },
+  label: { color: 'var(--text-secondary)', fontSize: '0.8rem' },
   input: {
-    padding: '0.65rem', borderRadius: '8px', border: '1px solid #334155',
-    background: '#1e293b', color: '#fff', fontSize: '0.9rem', outline: 'none',
+    padding: '0.65rem', borderRadius: '8px', border: '1px solid var(--border)',
+    background: 'var(--surface)', color: 'var(--text-heading)', fontSize: '0.9rem', outline: 'none',
     boxSizing: 'border-box', width: '100%',
   },
   textarea: {
-    padding: '0.65rem', borderRadius: '8px', border: '1px solid #334155',
-    background: '#1e293b', color: '#fff', fontSize: '0.9rem', outline: 'none',
+    padding: '0.65rem', borderRadius: '8px', border: '1px solid var(--border)',
+    background: 'var(--surface)', color: 'var(--text-heading)', fontSize: '0.9rem', outline: 'none',
     minHeight: '70px', fontFamily: 'inherit', resize: 'vertical',
     boxSizing: 'border-box', width: '100%',
   },
   totalsBox: {
     display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem',
     background: '#16a34a1a', border: '1px solid #16a34a44', borderRadius: '8px',
-    padding: '0.75rem 0.9rem', color: '#e2e8f0', fontSize: '0.85rem',
+    padding: '0.75rem 0.9rem', color: 'var(--text-primary)', fontSize: '0.85rem',
   },
-  targetNote: { color: '#94a3b8', fontSize: '0.75rem' },
-  mealSection: { background: '#1e293b', borderRadius: '10px', padding: '0.75rem' },
+  targetNote: { color: 'var(--text-secondary)', fontSize: '0.75rem' },
+  mealSection: { background: 'var(--surface)', borderRadius: '10px', padding: '0.75rem' },
   mealHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' },
-  mealName: { margin: 0, color: '#4ade80', fontWeight: 600, fontSize: '0.9rem' },
+  mealName: { margin: 0, color: 'var(--success-text)', fontWeight: 600, fontSize: '0.9rem' },
   addFoodBtn: {
-    background: '#16a34a22', border: 'none', color: '#4ade80', borderRadius: '6px',
+    background: '#16a34a22', border: 'none', color: 'var(--success-text)', borderRadius: '6px',
     padding: '0.4rem 0.7rem', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center',
   },
   removeMealBtn: {
-    background: '#7f1d1d22', border: 'none', color: '#f87171', borderRadius: '6px',
+    background: '#7f1d1d22', border: 'none', color: 'var(--danger-text)', borderRadius: '6px',
     padding: '0.4rem', cursor: 'pointer', display: 'flex', alignItems: 'center',
   },
-  emptyMeal: { color: '#64748b', fontSize: '0.8rem', margin: '0.3rem 0' },
+  emptyMeal: { color: 'var(--text-muted)', fontSize: '0.8rem', margin: '0.3rem 0' },
   foodItem: {
     display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0',
-    borderTop: '1px solid #334155',
+    borderTop: '1px solid var(--border)',
   },
-  foodName: { margin: 0, color: '#fff', fontSize: '0.85rem' },
-  foodMeta: { margin: '0.15rem 0 0', color: '#94a3b8', fontSize: '0.75rem' },
+  foodName: { margin: 0, color: 'var(--text-heading)', fontSize: '0.85rem' },
+  foodMeta: { margin: '0.15rem 0 0', color: 'var(--text-secondary)', fontSize: '0.75rem' },
   qtyInput: {
-    width: '55px', padding: '0.4rem', borderRadius: '6px', border: '1px solid #334155',
-    background: '#0f172a', color: '#fff', fontSize: '0.8rem', textAlign: 'center', outline: 'none',
+    width: '55px', padding: '0.4rem', borderRadius: '6px', border: '1px solid var(--border)',
+    background: 'var(--bg)', color: 'var(--text-heading)', fontSize: '0.8rem', textAlign: 'center', outline: 'none',
   },
   removeItemBtn: {
-    background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: '0.3rem',
+    background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.3rem',
   },
   addMealBtn: {
-    background: '#1e293b', border: '1px dashed #334155', color: '#94a3b8',
+    background: 'var(--surface)', border: '1px dashed var(--border)', color: 'var(--text-secondary)',
     borderRadius: '8px', padding: '0.6rem', fontSize: '0.85rem', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
-  error: { color: '#f87171', fontSize: '0.85rem' },
+  error: { color: 'var(--danger-text)', fontSize: '0.85rem' },
   saveBtn: {
-    background: '#16a34a', color: '#fff', border: 'none', padding: '0.8rem',
+    background: 'var(--accent)', color: '#fff', border: 'none', padding: '0.8rem',
     borderRadius: '8px', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', marginTop: '0.5rem',
   },
   modalOverlay: {
@@ -398,21 +398,21 @@ const styles = {
     background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'flex-end', zIndex: 50,
   },
   modal: {
-    background: '#1e293b', borderRadius: '16px 16px 0 0', width: '100%',
+    background: 'var(--surface)', borderRadius: '16px 16px 0 0', width: '100%',
     maxHeight: '80vh', display: 'flex', flexDirection: 'column', padding: '1rem',
   },
   modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' },
-  modalTitle: { color: '#fff', fontWeight: 600, fontSize: '1rem', margin: 0 },
-  closeBtn: { background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' },
+  modalTitle: { color: 'var(--text-heading)', fontWeight: 600, fontSize: '1rem', margin: 0 },
+  closeBtn: { background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' },
   searchInput: {
-    padding: '0.7rem', borderRadius: '8px', border: '1px solid #334155',
-    background: '#0f172a', color: '#fff', fontSize: '0.9rem', outline: 'none', marginBottom: '0.75rem',
+    padding: '0.7rem', borderRadius: '8px', border: '1px solid var(--border)',
+    background: 'var(--bg)', color: 'var(--text-heading)', fontSize: '0.9rem', outline: 'none', marginBottom: '0.75rem',
   },
   resultsList: { overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.4rem' },
   resultItem: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    background: '#0f172a', border: 'none', borderRadius: '8px', padding: '0.65rem 0.8rem', cursor: 'pointer',
+    background: 'var(--bg)', border: 'none', borderRadius: '8px', padding: '0.65rem 0.8rem', cursor: 'pointer',
   },
-  resultName: { margin: 0, color: '#fff', fontSize: '0.85rem' },
-  resultMeta: { margin: '0.15rem 0 0', color: '#94a3b8', fontSize: '0.75rem' },
+  resultName: { margin: 0, color: 'var(--text-heading)', fontSize: '0.85rem' },
+  resultMeta: { margin: '0.15rem 0 0', color: 'var(--text-secondary)', fontSize: '0.75rem' },
 }

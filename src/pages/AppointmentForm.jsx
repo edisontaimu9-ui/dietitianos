@@ -177,31 +177,31 @@ function Field({ label, children }) {
 }
 
 const styles = {
-  heading: { fontSize: '1.4rem', color: '#fff', marginBottom: '1rem' },
-  muted: { color: '#64748b', fontSize: '0.9rem' },
+  heading: { fontSize: '1.4rem', color: 'var(--text-heading)', marginBottom: '1rem' },
+  muted: { color: 'var(--text-muted)', fontSize: '0.9rem' },
   form: { display: 'flex', flexDirection: 'column', gap: '0.85rem' },
   row: { display: 'flex', gap: '0.6rem' },
   field: { display: 'flex', flexDirection: 'column', gap: '0.3rem', flex: 1 },
-  label: { color: '#94a3b8', fontSize: '0.8rem' },
+  label: { color: 'var(--text-secondary)', fontSize: '0.8rem' },
   input: {
-    padding: '0.65rem', borderRadius: '8px', border: '1px solid #334155',
-    background: '#1e293b', color: '#fff', fontSize: '0.9rem', outline: 'none',
+    padding: '0.65rem', borderRadius: '8px', border: '1px solid var(--border)',
+    background: 'var(--surface)', color: 'var(--text-heading)', fontSize: '0.9rem', outline: 'none',
     boxSizing: 'border-box', width: '100%',
   },
   textarea: {
-    padding: '0.65rem', borderRadius: '8px', border: '1px solid #334155',
-    background: '#1e293b', color: '#fff', fontSize: '0.9rem', outline: 'none',
+    padding: '0.65rem', borderRadius: '8px', border: '1px solid var(--border)',
+    background: 'var(--surface)', color: 'var(--text-heading)', fontSize: '0.9rem', outline: 'none',
     minHeight: '70px', fontFamily: 'inherit', resize: 'vertical',
     boxSizing: 'border-box', width: '100%',
   },
-  error: { color: '#f87171', fontSize: '0.85rem' },
+  error: { color: 'var(--danger-text)', fontSize: '0.85rem' },
   actions: { display: 'flex', gap: '0.6rem', marginTop: '0.5rem' },
   saveBtn: {
-    flex: 1, background: '#16a34a', color: '#fff', border: 'none',
+    flex: 1, background: 'var(--accent)', color: '#fff', border: 'none',
     padding: '0.75rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer',
   },
   deleteBtn: {
-    background: '#7f1d1d', color: '#fca5a5', border: 'none',
+    background: 'var(--danger-banner-bg)', color: 'var(--danger-banner-text)', border: 'none',
     padding: '0.75rem 1rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer',
   },
 }

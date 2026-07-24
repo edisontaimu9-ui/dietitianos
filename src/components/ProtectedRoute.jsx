@@ -11,8 +11,8 @@ export default function ProtectedRoute({ children }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#0f172a',
-        color: '#94a3b8',
+        background: 'var(--bg)',
+        color: 'var(--text-secondary)',
       }}>
         Loading...
       </div>

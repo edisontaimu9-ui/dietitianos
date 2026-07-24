@@ -2,7 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { useState } from 'react'
-import { Menu, LayoutDashboard, Users, Calendar, Sun, Moon } from 'lucide-react'
+import { Menu, LayoutDashboard, Users, Calendar, Sun, Moon, Settings as SettingsIcon } from 'lucide-react'
 
 export default function Layout() {
   const { signOut } = useAuth()
@@ -13,6 +13,7 @@ export default function Layout() {
     { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
     { to: '/patients', label: 'Patients', icon: Users },
     { to: '/appointments', label: 'Appointments', icon: Calendar },
+    { to: '/settings', label: 'Settings', icon: SettingsIcon },
   ]
 
   return (

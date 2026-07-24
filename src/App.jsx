@@ -19,6 +19,7 @@ import NcpDetail from './pages/NcpDetail'
 import MealPlanList from './pages/MealPlanList'
 import MealPlanForm from './pages/MealPlanForm'
 import MealPlanDetail from './pages/MealPlanDetail'
+import Settings from './pages/Settings'
 
 export default function App() {
   return (
@@ -56,6 +57,7 @@ export default function App() {
             <Route path="appointments" element={<Appointments />} />
             <Route path="appointments/new" element={<AppointmentForm />} />
             <Route path="appointments/:id/edit" element={<AppointmentForm />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>
       </AuthProvider>

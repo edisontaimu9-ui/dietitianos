@@ -20,6 +20,8 @@ import MealPlanList from './pages/MealPlanList'
 import MealPlanForm from './pages/MealPlanForm'
 import MealPlanDetail from './pages/MealPlanDetail'
 import Settings from './pages/Settings'
+import FoodDatabase from './pages/FoodDatabase'
+import Reports from './pages/Reports'
 
 export default function App() {
   return (
@@ -57,6 +59,8 @@ export default function App() {
             <Route path="appointments" element={<Appointments />} />
             <Route path="appointments/new" element={<AppointmentForm />} />
             <Route path="appointments/:id/edit" element={<AppointmentForm />} />
+            <Route path="food-database" element={<FoodDatabase />} />
+            <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>

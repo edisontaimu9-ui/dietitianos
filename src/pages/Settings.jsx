@@ -8,8 +8,14 @@ export default function Settings() {
   const { theme, toggleTheme } = useTheme()
 
   const [fullName, setFullName] = useState(user?.user_metadata?.full_name || '')
+  const [practiceName, setPracticeName] = useState(user?.user_metadata?.practice_name || '')
+  const [practicePhone, setPracticePhone] = useState(user?.user_metadata?.practice_phone || '')
+  const [practiceAddress, setPracticeAddress] = useState(user?.user_metadata?.practice_address || '')
   const [profileMsg, setProfileMsg] = useState('')
   const [profileLoading, setProfileLoading] = useState(false)
+
+  const [practiceMsg, setPracticeMsg] = useState('')
+  const [practiceLoading, setPracticeLoading] = useState(false)
 
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -21,9 +27,22 @@ export default function Settings() {
     e.preventDefault()
     setProfileMsg('')
     setProfileLoading(true)
-    const { error } = await updateProfile(fullName)
+    const { error } = await updateProfile({ full_name: fullName })
     setProfileLoading(false)
     setProfileMsg(error ? error.message : 'Profile updated')
+  }
+
+  const handlePracticeSave = async (e) => {
+    e.preventDefault()
+    setPracticeMsg('')
+    setPracticeLoading(true)
+    const { error } = await updateProfile({
+      practice_name: practiceName,
+      practice_phone: practicePhone,
+      practice_address: practiceAddress,
+    })
+    setPracticeLoading(false)
+    setPracticeMsg(error ? error.message : 'Practice details updated')
   }
 
   const handlePasswordSave = async (e) => {
@@ -75,6 +94,43 @@ export default function Settings() {
           {profileMsg && <p style={styles.hint}>{profileMsg}</p>}
           <button style={styles.button} type="submit" disabled={profileLoading}>
             {profileLoading ? 'Saving...' : 'Save profile'}
+          </button>
+        </form>
+      </section>
+
+      <section style={styles.card}>
+        <h2 style={styles.sectionTitle}>Practice Profile</h2>
+        <form onSubmit={handlePracticeSave} style={styles.form}>
+          <label style={styles.label} htmlFor="practiceName">Practice / clinic name</label>
+          <input
+            id="practiceName"
+            style={styles.input}
+            type="text"
+            value={practiceName}
+            onChange={(e) => setPracticeName(e.target.value)}
+            placeholder="e.g. Zomba Nutrition Clinic"
+          />
+          <label style={styles.label} htmlFor="practicePhone">Contact phone</label>
+          <input
+            id="practicePhone"
+            style={styles.input}
+            type="tel"
+            value={practicePhone}
+            onChange={(e) => setPracticePhone(e.target.value)}
+            placeholder="e.g. +265 999 000 000"
+          />
+          <label style={styles.label} htmlFor="practiceAddress">Address</label>
+          <input
+            id="practiceAddress"
+            style={styles.input}
+            type="text"
+            value={practiceAddress}
+            onChange={(e) => setPracticeAddress(e.target.value)}
+            placeholder="e.g. Zomba, Malawi"
+          />
+          {practiceMsg && <p style={styles.hint}>{practiceMsg}</p>}
+          <button style={styles.button} type="submit" disabled={practiceLoading}>
+            {practiceLoading ? 'Saving...' : 'Save practice details'}
           </button>
         </form>
       </section>

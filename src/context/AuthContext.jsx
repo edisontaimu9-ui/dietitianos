@@ -35,8 +35,8 @@ export function AuthProvider({ children }) {
   const updatePassword = (newPassword) =>
     supabase.auth.updateUser({ password: newPassword })
 
-  const updateProfile = (fullName) =>
-    supabase.auth.updateUser({ data: { full_name: fullName } })
+  const updateProfile = (metadata) =>
+    supabase.auth.updateUser({ data: metadata })
 
   return (
     <AuthContext.Provider

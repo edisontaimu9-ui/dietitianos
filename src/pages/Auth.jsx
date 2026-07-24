@@ -9,6 +9,7 @@ export default function Auth() {
   const [fullName, setFullName] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [signUpSuccess, setSignUpSuccess] = useState(false)
   const { signIn, signUp } = useAuth()
   const navigate = useNavigate()
 
@@ -25,6 +26,8 @@ export default function Auth() {
 
     if (error) {
       setError(error.message)
+    } else if (isSignUp) {
+      setSignUpSuccess(true)
     } else {
       navigate('/')
     }
@@ -34,49 +37,72 @@ export default function Auth() {
     <div style={styles.container}>
       <div style={styles.card}>
         <h1 style={styles.title}>DietitianOS</h1>
-        <p style={styles.subtitle}>
-          {isSignUp ? 'Create your practice account' : 'Sign in to your practice'}
-        </p>
+        {signUpSuccess ? (
+          <div style={styles.successBox}>
+            <p style={styles.successTitle}>✓ Account created successfully</p>
+            <p style={styles.successText}>
+              A confirmation email will be sent to <strong>{email}</strong>.
+              Please check your inbox and confirm your address before signing in.
+            </p>
+            <button
+              style={styles.button}
+              type="button"
+              onClick={() => {
+                setSignUpSuccess(false)
+                setIsSignUp(false)
+                setPassword('')
+              }}
+            >
+              Back to Sign In
+            </button>
+          </div>
+        ) : (
+          <>
+            <p style={styles.subtitle}>
+              {isSignUp ? 'Create your practice account' : 'Sign in to your practice'}
+            </p>
 
-        <form onSubmit={handleSubmit} style={styles.form}>
-          {isSignUp && (
-            <input
-              style={styles.input}
-              type="text"
-              placeholder="Full name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              required
-            />
-          )}
-          <input
-            style={styles.input}
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            style={styles.input}
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
-          />
+            <form onSubmit={handleSubmit} style={styles.form}>
+              {isSignUp && (
+                <input
+                  style={styles.input}
+                  type="text"
+                  placeholder="Full name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
+              )}
+              <input
+                style={styles.input}
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                style={styles.input}
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
 
-          {error && <p style={styles.error}>{error}</p>}
+              {error && <p style={styles.error}>{error}</p>}
 
-          <button style={styles.button} type="submit" disabled={loading}>
-            {loading ? 'Please wait...' : isSignUp ? 'Sign Up' : 'Sign In'}
-          </button>
-        </form>
+              <button style={styles.button} type="submit" disabled={loading}>
+                {loading ? 'Please wait...' : isSignUp ? 'Sign Up' : 'Sign In'}
+              </button>
+            </form>
 
-        <p style={styles.toggle} onClick={() => setIsSignUp(!isSignUp)}>
-          {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
-        </p>
+            <p style={styles.toggle} onClick={() => setIsSignUp(!isSignUp)}>
+              {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+            </p>
+          </>
+        )}
       </div>
     </div>
   )
@@ -147,5 +173,24 @@ const styles = {
     textAlign: 'center',
     marginTop: '1.25rem',
     cursor: 'pointer',
+  },
+  successBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  successTitle: {
+    color: 'var(--text-heading)',
+    fontSize: '1.1rem',
+    fontWeight: 600,
+    margin: 0,
+  },
+  successText: {
+    color: 'var(--text-secondary)',
+    fontSize: '0.9rem',
+    margin: 0,
+    lineHeight: 1.5,
   },
 }

@@ -21,7 +21,7 @@ import MealPlanDetail from './pages/MealPlanDetail'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/dietitianos/">
       <AuthProvider>
         <Routes>
           <Route path="/auth" element={<Auth />} />

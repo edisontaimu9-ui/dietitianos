@@ -1,7 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Plus, Trash2, CalendarPlus } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { collData, docData } from '../lib/firestoreHelpers'
 import { useAuth } from '../context/AuthContext'
 
 const emptyForm = {
@@ -49,19 +61,22 @@ export default function NcpForm() {
 
   async function load() {
     setLoading(true)
-    const [patientRes, assessmentsRes] = await Promise.all([
-      supabase.from('patients').select('*').eq('id', patientId).single(),
-      supabase
-        .from('nutrition_assessments')
-        .select('id, assessment_date')
-        .eq('patient_id', patientId)
-        .order('assessment_date', { ascending: false }),
+    const [patientSnap, assessmentsSnap] = await Promise.all([
+      getDoc(doc(db, 'patients', patientId)),
+      getDocs(
+        query(
+          collection(db, 'nutrition_assessments'),
+          where('patient_id', '==', patientId),
+          orderBy('assessment_date', 'desc')
+        )
+      ),
     ])
-    setPatient(patientRes.data)
-    setAssessments(assessmentsRes.data || [])
+    setPatient(docData(patientSnap))
+    setAssessments(collData(assessmentsSnap))
 
     if (isEdit) {
-      const { data } = await supabase.from('ncp_records').select('*').eq('id', ncpId).single()
+      const snap = await getDoc(doc(db, 'ncp_records', ncpId))
+      const data = docData(snap)
       if (data) {
         setForm({ ...emptyForm, ...data, assessment_id: data.assessment_id || '' })
         setGoals(Array.isArray(data.smart_goals) ? data.smart_goals : [])
@@ -112,18 +127,20 @@ export default function NcpForm() {
       status: form.status,
     }
 
-    const result = isEdit
-      ? await supabase.from('ncp_records').update(payload).eq('id', ncpId)
-      : await supabase.from('ncp_records').insert(payload).select().single()
-
-    setSaving(false)
-
-    if (result.error) {
-      setError(result.error.message)
-      return
+    try {
+      let newId = ncpId
+      if (isEdit) {
+        await updateDoc(doc(db, 'ncp_records', ncpId), payload)
+      } else {
+        const ref = await addDoc(collection(db, 'ncp_records'), payload)
+        newId = ref.id
+      }
+      setSaving(false)
+      navigate(`/patients/${patientId}/ncp/${newId}`)
+    } catch (err) {
+      setSaving(false)
+      setError(err.message)
     }
-
-    navigate(`/patients/${patientId}/ncp/${isEdit ? ncpId : result.data.id}`)
   }
 
   async function handleCreateFollowUpAppointment() {
@@ -133,18 +150,21 @@ export default function NcpForm() {
     const startTime = new Date(`${form.follow_up_date}T09:00`)
     const endTime = new Date(startTime.getTime() + 30 * 60000)
 
-    const { error } = await supabase.from('appointments').insert({
-      dietitian_id: user.id,
-      patient_id: patientId,
-      start_time: startTime.toISOString(),
-      end_time: endTime.toISOString(),
-      type: 'in-person',
-      status: 'scheduled',
-      notes: form.follow_up_notes || 'Follow-up appointment',
-    })
-
+    try {
+      await addDoc(collection(db, 'appointments'), {
+        dietitian_id: user.id,
+        patient_id: patientId,
+        start_time: startTime.toISOString(),
+        end_time: endTime.toISOString(),
+        type: 'in-person',
+        status: 'scheduled',
+        notes: form.follow_up_notes || 'Follow-up appointment',
+      })
+      setApptCreated(true)
+    } catch (err) {
+      console.error(err)
+    }
     setCreatingAppt(false)
-    if (!error) setApptCreated(true)
   }
 
   if (loading) return <p style={styles.muted}>Loading...</p>

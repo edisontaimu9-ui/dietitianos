@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import { doc, getDoc, addDoc, updateDoc, deleteDoc, collection, serverTimestamp } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { docData } from '../lib/firestoreHelpers'
 import { useAuth } from '../context/AuthContext'
 
 const emptyForm = {
@@ -32,8 +34,9 @@ export default function PatientForm() {
   }, [id])
 
   async function loadPatient() {
-    const { data, error } = await supabase.from('patients').select('*').eq('id', id).single()
-    if (!error && data) {
+    const snap = await getDoc(doc(db, 'patients', id))
+    const data = docData(snap)
+    if (data) {
       setForm({ ...emptyForm, ...data })
     }
     setLoading(false)
@@ -53,23 +56,29 @@ export default function PatientForm() {
     delete payload.created_at
     delete payload.updated_at
 
-    const result = isEdit
-      ? await supabase.from('patients').update(payload).eq('id', id)
-      : await supabase.from('patients').insert(payload).select().single()
-
-    setSaving(false)
-
-    if (result.error) {
-      setError(result.error.message)
-      return
+    try {
+      let newId = id
+      if (isEdit) {
+        await updateDoc(doc(db, 'patients', id), { ...payload, updated_at: serverTimestamp() })
+      } else {
+        const ref = await addDoc(collection(db, 'patients'), {
+          ...payload,
+          status: payload.status || 'active',
+          created_at: serverTimestamp(),
+        })
+        newId = ref.id
+      }
+      setSaving(false)
+      navigate(isEdit ? `/patients/${id}` : `/patients/${newId}`)
+    } catch (err) {
+      setSaving(false)
+      setError(err.message)
     }
-
-    navigate(isEdit ? `/patients/${id}` : `/patients/${result.data.id}`)
   }
 
   async function handleDelete() {
     if (!confirm('Delete this patient? This cannot be undone.')) return
-    await supabase.from('patients').delete().eq('id', id)
+    await deleteDoc(doc(db, 'patients', id))
     navigate('/patients')
   }
 

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Pencil } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { docData } from '../lib/firestoreHelpers'
 import { bmiCategory } from '../lib/nutritionCalc'
 
 export default function AssessmentDetail() {
@@ -14,12 +16,8 @@ export default function AssessmentDetail() {
   }, [assessmentId])
 
   async function load() {
-    const { data } = await supabase
-      .from('nutrition_assessments')
-      .select('*')
-      .eq('id', assessmentId)
-      .single()
-    setAssessment(data)
+    const snap = await getDoc(doc(db, 'nutrition_assessments', assessmentId))
+    setAssessment(docData(snap))
     setLoading(false)
   }
 

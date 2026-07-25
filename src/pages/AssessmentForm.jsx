@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { docData } from '../lib/firestoreHelpers'
 import { useAuth } from '../context/AuthContext'
 import {
   calculateBMI,
@@ -47,15 +49,12 @@ export default function AssessmentForm() {
 
   async function load() {
     setLoading(true)
-    const patientRes = await supabase.from('patients').select('*').eq('id', patientId).single()
-    setPatient(patientRes.data)
+    const patientSnap = await getDoc(doc(db, 'patients', patientId))
+    setPatient(docData(patientSnap))
 
     if (isEdit) {
-      const { data } = await supabase
-        .from('nutrition_assessments')
-        .select('*')
-        .eq('id', assessmentId)
-        .single()
+      const snap = await getDoc(doc(db, 'nutrition_assessments', assessmentId))
+      const data = docData(snap)
       if (data) {
         setForm({
           ...emptyForm,
@@ -113,18 +112,20 @@ export default function AssessmentForm() {
       notes: form.notes,
     }
 
-    const result = isEdit
-      ? await supabase.from('nutrition_assessments').update(payload).eq('id', assessmentId)
-      : await supabase.from('nutrition_assessments').insert(payload).select().single()
-
-    setSaving(false)
-
-    if (result.error) {
-      setError(result.error.message)
-      return
+    try {
+      let newId = assessmentId
+      if (isEdit) {
+        await updateDoc(doc(db, 'nutrition_assessments', assessmentId), payload)
+      } else {
+        const ref = await addDoc(collection(db, 'nutrition_assessments'), payload)
+        newId = ref.id
+      }
+      setSaving(false)
+      navigate(`/patients/${patientId}/assessments/${newId}`)
+    } catch (err) {
+      setSaving(false)
+      setError(err.message)
     }
-
-    navigate(`/patients/${patientId}/assessments/${isEdit ? assessmentId : result.data.id}`)
   }
 
   if (loading) return <p style={styles.muted}>Loading...</p>

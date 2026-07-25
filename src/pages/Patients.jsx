@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import { collection, query, where, orderBy, getDocs } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { collData } from '../lib/firestoreHelpers'
 import { useAuth } from '../context/AuthContext'
 
 export default function Patients() {
@@ -15,13 +17,17 @@ export default function Patients() {
 
   async function loadPatients() {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('patients')
-      .select('*')
-      .eq('dietitian_id', user.id)
-      .order('created_at', { ascending: false })
-
-    if (!error) setPatients(data)
+    try {
+      const q = query(
+        collection(db, 'patients'),
+        where('dietitian_id', '==', user.id),
+        orderBy('created_at', 'desc')
+      )
+      const snap = await getDocs(q)
+      setPatients(collData(snap))
+    } catch (err) {
+      console.error(err)
+    }
     setLoading(false)
   }
 

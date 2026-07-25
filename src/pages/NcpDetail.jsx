@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Pencil, CheckCircle2, Circle } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { docData } from '../lib/firestoreHelpers'
 
 export default function NcpDetail() {
   const { id: patientId, ncpId } = useParams()
@@ -13,8 +15,8 @@ export default function NcpDetail() {
   }, [ncpId])
 
   async function load() {
-    const { data } = await supabase.from('ncp_records').select('*').eq('id', ncpId).single()
-    setRecord(data)
+    const snap = await getDoc(doc(db, 'ncp_records', ncpId))
+    setRecord(docData(snap))
     setLoading(false)
   }
 

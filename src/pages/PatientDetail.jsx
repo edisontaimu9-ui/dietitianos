@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { docData, collData } from '../lib/firestoreHelpers'
 
 export default function PatientDetail() {
   const { id } = useParams()
@@ -14,17 +16,19 @@ export default function PatientDetail() {
 
   async function load() {
     setLoading(true)
-    const [patientRes, apptRes] = await Promise.all([
-      supabase.from('patients').select('*').eq('id', id).single(),
-      supabase
-        .from('appointments')
-        .select('*')
-        .eq('patient_id', id)
-        .order('start_time', { ascending: false })
-        .limit(10),
+    const [patientSnap, apptSnap] = await Promise.all([
+      getDoc(doc(db, 'patients', id)),
+      getDocs(
+        query(
+          collection(db, 'appointments'),
+          where('patient_id', '==', id),
+          orderBy('start_time', 'desc'),
+          limit(10)
+        )
+      ),
     ])
-    setPatient(patientRes.data)
-    setAppointments(apptRes.data || [])
+    setPatient(docData(patientSnap))
+    setAppointments(collData(apptSnap))
     setLoading(false)
   }
 

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { collection, getDocs, query, where } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { collData, toDate } from '../lib/firestoreHelpers'
 import { useAuth } from '../context/AuthContext'
 import { bmiCategory } from '../lib/nutritionCalc'
 
@@ -26,18 +28,15 @@ export default function Reports() {
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-    const [patientsRes, assessmentsRes, apptsRes] = await Promise.all([
-      supabase.from('patients').select('id, status, created_at').eq('dietitian_id', user.id),
-      supabase
-        .from('nutrition_assessments')
-        .select('weight_kg, height_cm, nutrition_risk_level, patients!inner(dietitian_id)')
-        .eq('patients.dietitian_id', user.id),
-      supabase.from('appointments').select('status').eq('dietitian_id', user.id),
+    const [patientsSnap, assessmentsSnap, apptsSnap] = await Promise.all([
+      getDocs(query(collection(db, 'patients'), where('dietitian_id', '==', user.id))),
+      getDocs(query(collection(db, 'nutrition_assessments'), where('dietitian_id', '==', user.id))),
+      getDocs(query(collection(db, 'appointments'), where('dietitian_id', '==', user.id))),
     ])
 
-    const patients = patientsRes.data || []
-    const assessments = assessmentsRes.data || []
-    const appts = apptsRes.data || []
+    const patients = collData(patientsSnap)
+    const assessments = collData(assessmentsSnap)
+    const appts = collData(apptsSnap)
 
     const bmiBuckets = { Underweight: 0, 'Normal weight': 0, Overweight: 0, Obese: 0 }
     const riskLevels = { low: 0, moderate: 0, high: 0 }
@@ -60,7 +59,7 @@ export default function Reports() {
     }
 
     const newPatientsLast30d = patients.filter(
-      (p) => new Date(p.created_at) >= thirtyDaysAgo
+      (p) => toDate(p.created_at) >= thirtyDaysAgo
     ).length
 
     setStats({

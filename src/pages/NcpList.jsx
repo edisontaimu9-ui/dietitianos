@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { FileText, Plus } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { collData } from '../lib/firestoreHelpers'
 
 export default function NcpList() {
   const { id: patientId } = useParams()
@@ -14,12 +16,13 @@ export default function NcpList() {
 
   async function load() {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('ncp_records')
-      .select('*')
-      .eq('patient_id', patientId)
-      .order('record_date', { ascending: false })
-    if (!error) setRecords(data)
+    const q = query(
+      collection(db, 'ncp_records'),
+      where('patient_id', '==', patientId),
+      orderBy('record_date', 'desc')
+    )
+    const snap = await getDocs(q)
+    setRecords(collData(snap))
     setLoading(false)
   }
 

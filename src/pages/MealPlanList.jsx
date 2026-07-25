@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Utensils, Plus } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { collData } from '../lib/firestoreHelpers'
 import { sumMealNutrients } from '../lib/chakudyaApi'
 
 export default function MealPlanList() {
@@ -15,12 +17,13 @@ export default function MealPlanList() {
 
   async function load() {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('meal_plans')
-      .select('*')
-      .eq('patient_id', patientId)
-      .order('plan_date', { ascending: false })
-    if (!error) setPlans(data)
+    const q = query(
+      collection(db, 'meal_plans'),
+      where('patient_id', '==', patientId),
+      orderBy('plan_date', 'desc')
+    )
+    const snap = await getDocs(q)
+    setPlans(collData(snap))
     setLoading(false)
   }
 

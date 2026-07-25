@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import { collection, doc, getDoc, getDocs, limit, orderBy, query, updateDoc, where } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { collData } from '../lib/firestoreHelpers'
 import { useAuth } from '../context/AuthContext'
 
 export default function Appointments() {
@@ -15,25 +17,45 @@ export default function Appointments() {
 
   async function load() {
     setLoading(true)
-    let query = supabase
-      .from('appointments')
-      .select('*, patients(full_name)')
-      .eq('dietitian_id', user.id)
-
     const now = new Date().toISOString()
-    if (filter === 'upcoming') {
-      query = query.gte('start_time', now).order('start_time', { ascending: true })
-    } else {
-      query = query.lt('start_time', now).order('start_time', { ascending: false })
-    }
 
-    const { data, error } = await query.limit(50)
-    if (!error) setAppointments(data)
+    const q =
+      filter === 'upcoming'
+        ? query(
+            collection(db, 'appointments'),
+            where('dietitian_id', '==', user.id),
+            where('start_time', '>=', now),
+            orderBy('start_time', 'asc'),
+            limit(50)
+          )
+        : query(
+            collection(db, 'appointments'),
+            where('dietitian_id', '==', user.id),
+            where('start_time', '<', now),
+            orderBy('start_time', 'desc'),
+            limit(50)
+          )
+
+    const snap = await getDocs(q)
+    let appts = collData(snap)
+
+    // Firestore has no relational joins, so pull each referenced patient's name separately.
+    const patientIds = [...new Set(appts.map((a) => a.patient_id).filter(Boolean))]
+    const patientNames = {}
+    await Promise.all(
+      patientIds.map(async (pid) => {
+        const pSnap = await getDoc(doc(db, 'patients', pid))
+        if (pSnap.exists()) patientNames[pid] = pSnap.data().full_name
+      })
+    )
+    appts = appts.map((a) => ({ ...a, patients: { full_name: patientNames[a.patient_id] } }))
+
+    setAppointments(appts)
     setLoading(false)
   }
 
   async function updateStatus(id, status) {
-    await supabase.from('appointments').update({ status }).eq('id', id)
+    await updateDoc(doc(db, 'appointments', id), { status })
     load()
   }
 

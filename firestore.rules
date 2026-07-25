@@ -1,0 +1,56 @@
+rules_version = '2';
+
+// Mirrors the row-level scoping DietitianOS relied on in Supabase:
+// every clinical record carries a dietitian_id, and a dietitian may only
+// read/write their own records. There is no public/anonymous access.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function ownsExisting() {
+      return isSignedIn() && resource.data.dietitian_id == request.auth.uid;
+    }
+
+    function ownsIncoming() {
+      return isSignedIn() && request.resource.data.dietitian_id == request.auth.uid;
+    }
+
+    match /patients/{patientId} {
+      allow read, update, delete: if ownsExisting();
+      allow create: if ownsIncoming();
+    }
+
+    match /appointments/{appointmentId} {
+      allow read, update, delete: if ownsExisting();
+      allow create: if ownsIncoming();
+    }
+
+    match /nutrition_assessments/{assessmentId} {
+      allow read, update, delete: if ownsExisting();
+      allow create: if ownsIncoming();
+    }
+
+    match /ncp_records/{ncpId} {
+      allow read, update, delete: if ownsExisting();
+      allow create: if ownsIncoming();
+    }
+
+    match /meal_plans/{planId} {
+      allow read, update, delete: if ownsExisting();
+      allow create: if ownsIncoming();
+    }
+
+    // One profile doc per dietitian, keyed by their own uid.
+    match /dietitian_profiles/{uid} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Deny everything else by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

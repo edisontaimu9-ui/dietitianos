@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Pencil, Printer } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { docData } from '../lib/firestoreHelpers'
 import { scaleFoodNutrients, sumMealNutrients } from '../lib/chakudyaApi'
 
 export default function MealPlanDetail() {
@@ -15,12 +17,12 @@ export default function MealPlanDetail() {
   }, [planId])
 
   async function load() {
-    const [planRes, patientRes] = await Promise.all([
-      supabase.from('meal_plans').select('*').eq('id', planId).single(),
-      supabase.from('patients').select('full_name').eq('id', patientId).single(),
+    const [planSnap, patientSnap] = await Promise.all([
+      getDoc(doc(db, 'meal_plans', planId)),
+      getDoc(doc(db, 'patients', patientId)),
     ])
-    setPlan(planRes.data)
-    setPatient(patientRes.data)
+    setPlan(docData(planSnap))
+    setPatient(docData(patientSnap))
     setLoading(false)
   }
 

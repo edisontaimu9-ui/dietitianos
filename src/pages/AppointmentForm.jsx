@@ -1,6 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { collData, docData } from '../lib/firestoreHelpers'
 import { useAuth } from '../context/AuthContext'
 
 export default function AppointmentForm() {
@@ -28,17 +41,19 @@ export default function AppointmentForm() {
   }, [id])
 
   async function loadPatients() {
-    const { data } = await supabase
-      .from('patients')
-      .select('id, full_name')
-      .eq('dietitian_id', user.id)
-      .order('full_name')
-    setPatients(data || [])
+    const q = query(
+      collection(db, 'patients'),
+      where('dietitian_id', '==', user.id),
+      orderBy('full_name')
+    )
+    const snap = await getDocs(q)
+    setPatients(collData(snap))
   }
 
   async function loadAppointment() {
-    const { data, error } = await supabase.from('appointments').select('*').eq('id', id).single()
-    if (!error && data) {
+    const snap = await getDoc(doc(db, 'appointments', id))
+    const data = docData(snap)
+    if (data) {
       const start = new Date(data.start_time)
       const end = new Date(data.end_time)
       setPatientId(data.patient_id)
@@ -76,23 +91,23 @@ export default function AppointmentForm() {
       status,
     }
 
-    const result = isEdit
-      ? await supabase.from('appointments').update(payload).eq('id', id)
-      : await supabase.from('appointments').insert(payload)
-
-    setSaving(false)
-
-    if (result.error) {
-      setError(result.error.message)
-      return
+    try {
+      if (isEdit) {
+        await updateDoc(doc(db, 'appointments', id), payload)
+      } else {
+        await addDoc(collection(db, 'appointments'), payload)
+      }
+      setSaving(false)
+      navigate('/appointments')
+    } catch (err) {
+      setSaving(false)
+      setError(err.message)
     }
-
-    navigate('/appointments')
   }
 
   async function handleDelete() {
     if (!confirm('Delete this appointment?')) return
-    await supabase.from('appointments').delete().eq('id', id)
+    await deleteDoc(doc(db, 'appointments', id))
     navigate('/appointments')
   }
 

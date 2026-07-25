@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Plus, Trash2, Search, X } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { docData } from '../lib/firestoreHelpers'
 import { useAuth } from '../context/AuthContext'
 import { searchFoods, scaleFoodNutrients, sumMealNutrients } from '../lib/chakudyaApi'
 
@@ -37,11 +39,12 @@ export default function MealPlanForm() {
 
   async function load() {
     setLoading(true)
-    const patientRes = await supabase.from('patients').select('*').eq('id', patientId).single()
-    setPatient(patientRes.data)
+    const patientSnap = await getDoc(doc(db, 'patients', patientId))
+    setPatient(docData(patientSnap))
 
     if (isEdit) {
-      const { data } = await supabase.from('meal_plans').select('*').eq('id', planId).single()
+      const snap = await getDoc(doc(db, 'meal_plans', planId))
+      const data = docData(snap)
       if (data) {
         setTitle(data.title)
         setPlanDate(data.plan_date)
@@ -149,18 +152,20 @@ export default function MealPlanForm() {
       meals,
     }
 
-    const result = isEdit
-      ? await supabase.from('meal_plans').update(payload).eq('id', planId)
-      : await supabase.from('meal_plans').insert(payload).select().single()
-
-    setSaving(false)
-
-    if (result.error) {
-      setError(result.error.message)
-      return
+    try {
+      let newId = planId
+      if (isEdit) {
+        await updateDoc(doc(db, 'meal_plans', planId), payload)
+      } else {
+        const ref = await addDoc(collection(db, 'meal_plans'), payload)
+        newId = ref.id
+      }
+      setSaving(false)
+      navigate(`/patients/${patientId}/meal-plans/${newId}`)
+    } catch (err) {
+      setSaving(false)
+      setError(err.message)
     }
-
-    navigate(`/patients/${patientId}/meal-plans/${isEdit ? planId : result.data.id}`)
   }
 
   if (loading) return <p style={styles.muted}>Loading...</p>

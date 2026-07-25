@@ -1,6 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getCountFromServer,
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { collData } from '../lib/firestoreHelpers'
 import { useAuth } from '../context/AuthContext'
 
 export default function Dashboard() {
@@ -25,32 +36,53 @@ export default function Dashboard() {
     const endOfToday = new Date()
     endOfToday.setHours(23, 59, 59, 999)
 
-    const [todayRes, upcomingRes, patientsRes] = await Promise.all([
-      supabase
-        .from('appointments')
-        .select('*, patients(full_name)')
-        .eq('dietitian_id', user.id)
-        .gte('start_time', startOfToday.toISOString())
-        .lte('start_time', endOfToday.toISOString())
-        .order('start_time', { ascending: true }),
-      supabase
-        .from('appointments')
-        .select('id', { count: 'exact', head: true })
-        .eq('dietitian_id', user.id)
-        .gt('start_time', endOfToday.toISOString())
-        .eq('status', 'scheduled'),
-      supabase
-        .from('patients')
-        .select('id', { count: 'exact', head: true })
-        .eq('dietitian_id', user.id)
-        .eq('status', 'active'),
+    const todayQuery = query(
+      collection(db, 'appointments'),
+      where('dietitian_id', '==', user.id),
+      where('start_time', '>=', startOfToday.toISOString()),
+      where('start_time', '<=', endOfToday.toISOString()),
+      orderBy('start_time', 'asc')
+    )
+    const upcomingQuery = query(
+      collection(db, 'appointments'),
+      where('dietitian_id', '==', user.id),
+      where('start_time', '>', endOfToday.toISOString()),
+      where('status', '==', 'scheduled')
+    )
+    const activePatientsQuery = query(
+      collection(db, 'patients'),
+      where('dietitian_id', '==', user.id),
+      where('status', '==', 'active')
+    )
+
+    const [todaySnap, upcomingCountSnap, activePatientsCountSnap] = await Promise.all([
+      getDocs(todayQuery),
+      getCountFromServer(upcomingQuery),
+      getCountFromServer(activePatientsQuery),
     ])
 
-    setTodayAppts(todayRes.data || [])
+    let todayAppts = collData(todaySnap)
+
+    // Firestore has no relational joins, so pull each referenced patient's
+    // name separately (there's usually only a handful of appointments today).
+    const patientIds = [...new Set(todayAppts.map((a) => a.patient_id).filter(Boolean))]
+    const patientNames = {}
+    await Promise.all(
+      patientIds.map(async (pid) => {
+        const pSnap = await getDoc(doc(db, 'patients', pid))
+        if (pSnap.exists()) patientNames[pid] = pSnap.data().full_name
+      })
+    )
+    todayAppts = todayAppts.map((a) => ({
+      ...a,
+      patients: { full_name: patientNames[a.patient_id] },
+    }))
+
+    setTodayAppts(todayAppts)
     setStats({
-      todayCount: todayRes.data?.length || 0,
-      upcomingCount: upcomingRes.count || 0,
-      activePatients: patientsRes.count || 0,
+      todayCount: todayAppts.length,
+      upcomingCount: upcomingCountSnap.data().count,
+      activePatients: activePatientsCountSnap.data().count,
     })
     setLoading(false)
   }

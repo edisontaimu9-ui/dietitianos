@@ -3,6 +3,8 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut as firebaseSignOut,
   updateProfile as firebaseUpdateProfile,
   updatePassword as firebaseUpdatePassword,
@@ -12,6 +14,7 @@ import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../lib/firebase'
 
 const AuthContext = createContext()
+const googleProvider = new GoogleAuthProvider()
 
 const FRIENDLY_ERRORS = {
   'auth/email-already-in-use': 'An account with this email already exists.',
@@ -22,6 +25,11 @@ const FRIENDLY_ERRORS = {
   'auth/invalid-credential': 'Invalid email or password.',
   'auth/too-many-requests': 'Too many attempts. Please try again later.',
   'auth/requires-recent-login': 'Please sign out and sign in again before changing your password.',
+  'auth/popup-closed-by-user': 'Sign-in was cancelled.',
+  'auth/cancelled-popup-request': 'Sign-in was cancelled.',
+  'auth/popup-blocked': 'Your browser blocked the sign-in popup. Please allow popups and try again.',
+  'auth/account-exists-with-different-credential':
+    'An account already exists with this email using a different sign-in method.',
 }
 
 function friendlyError(error) {
@@ -94,6 +102,26 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function signInWithGoogle() {
+    try {
+      const cred = await signInWithPopup(auth, googleProvider)
+      const profileRef = doc(db, 'dietitian_profiles', cred.user.uid)
+      const existing = await getDoc(profileRef)
+      if (!existing.exists()) {
+        await setDoc(profileRef, {
+          full_name: cred.user.displayName || '',
+          practice_name: '',
+          practice_phone: '',
+          practice_address: '',
+          created_at: serverTimestamp(),
+        })
+      }
+      return { error: null }
+    } catch (error) {
+      return { error: friendlyError(error) }
+    }
+  }
+
   const signOut = () => firebaseSignOut(auth)
 
   async function updatePassword(newPassword) {
@@ -127,7 +155,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, signUp, signIn, signOut, updatePassword, updateProfile }}
+      value={{ user, loading, signUp, signIn, signInWithGoogle, signOut, updatePassword, updateProfile }}
     >
       {children}
     </AuthContext.Provider>
